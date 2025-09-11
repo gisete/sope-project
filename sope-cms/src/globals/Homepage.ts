@@ -107,19 +107,14 @@ export const Homepage: GlobalConfig = {
           required: true,
         },
         {
-          name: 'activities',
-          label: 'Activities',
-          type: 'array',
-          minRows: 3,
-          maxRows: 3,
-          fields: [
-            {
-              name: 'image',
-              type: 'upload',
-              relationTo: 'media',
-              required: true,
-            },
-          ],
+          name: 'image',
+          label: 'Activities Image (2x2 Grid)',
+          type: 'upload',
+          relationTo: 'media',
+          required: true,
+          admin: {
+            description: 'Upload a single image that contains 4 activities arranged in a 2x2 grid',
+          },
         },
         {
           name: 'button',

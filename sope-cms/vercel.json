@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "sope-website/package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/admin(.*)",
+      "dest": "sope-cms/$1"
+    },
+    {
+      "src": "/api(.*)",
+      "dest": "sope-cms/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "sope-website/$1"
+    }
+  ]
+}
