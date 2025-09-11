@@ -89,10 +89,16 @@ export interface Config {
   globals: {
     homepage: Homepage;
     'main-menu': MainMenu;
+    'quem-somos': QuemSomo;
+    inscricoes: Inscricoe;
+    contactos: Contacto;
   };
   globalsSelect: {
     homepage: HomepageSelect<false> | HomepageSelect<true>;
     'main-menu': MainMenuSelect<false> | MainMenuSelect<true>;
+    'quem-somos': QuemSomosSelect<false> | QuemSomosSelect<true>;
+    inscricoes: InscricoesSelect<false> | InscricoesSelect<true>;
+    contactos: ContactosSelect<false> | ContactosSelect<true>;
   };
   locale: null;
   user: User & {
@@ -396,6 +402,143 @@ export interface MainMenu {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quem-somos".
+ */
+export interface QuemSomo {
+  id: number;
+  hero: {
+    title: string;
+    description: string;
+    image: number | Media;
+  };
+  oSopeSection: {
+    title: string;
+    text: string;
+  };
+  principiosSection: {
+    title: string;
+    content?:
+      | {
+          type: 'text' | 'image';
+          text?: string | null;
+          image?: (number | null) | Media;
+          imagePosition?: ('left' | 'right' | 'center') | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  pretendemoSection: {
+    title: string;
+    layout?: ('text-left' | 'image-left') | null;
+    bulletPoints?:
+      | {
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+    image?: (number | null) | Media;
+  };
+  equipaSection: {
+    title: string;
+    teamMembers?:
+      | {
+          name: string;
+          title: string;
+          description: string;
+          image: number | Media;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inscricoes".
+ */
+export interface Inscricoe {
+  id: number;
+  hero: {
+    title: string;
+    description?: string | null;
+    image: number | Media;
+  };
+  programs?:
+    | {
+        title: string;
+        description: string;
+        /**
+         * e.g., "Os playgroups para bebés destinam-se a crianças entre os 6 meses e os 3 anos de idade."
+         */
+        ageRange?: string | null;
+        image: number | Media;
+        imagePosition: 'left' | 'right';
+        backgroundColor: 'pink' | 'gray' | 'blue' | 'green' | 'white';
+        buttons: {
+          inscricaoButton: {
+            text: string;
+            link: string;
+          };
+          informacoesButton: {
+            text: string;
+            link: string;
+          };
+        };
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contactos".
+ */
+export interface Contacto {
+  id: number;
+  hero: {
+    title: string;
+    description?: string | null;
+    image: number | Media;
+  };
+  contactInfo: {
+    phone: string;
+    email: string;
+    address: {
+      street: string;
+      postalCode: string;
+      /**
+       * Additional details about how to find the location
+       */
+      description?: string | null;
+    };
+    socialMedia?: {
+      instagram?: string | null;
+      facebook?: string | null;
+    };
+  };
+  contactForm: {
+    title: string;
+    description?: string | null;
+    submitButtonText: string;
+  };
+  openingHours: {
+    title: string;
+    schedule?:
+      | {
+          day: string;
+          hours: string;
+          notes?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "homepage_select".
  */
 export interface HomepageSelect<T extends boolean = true> {
@@ -459,6 +602,167 @@ export interface MainMenuSelect<T extends boolean = true> {
         label?: T;
         link?: T;
         id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quem-somos_select".
+ */
+export interface QuemSomosSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  oSopeSection?:
+    | T
+    | {
+        title?: T;
+        text?: T;
+      };
+  principiosSection?:
+    | T
+    | {
+        title?: T;
+        content?:
+          | T
+          | {
+              type?: T;
+              text?: T;
+              image?: T;
+              imagePosition?: T;
+              id?: T;
+            };
+      };
+  pretendemoSection?:
+    | T
+    | {
+        title?: T;
+        layout?: T;
+        bulletPoints?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        image?: T;
+      };
+  equipaSection?:
+    | T
+    | {
+        title?: T;
+        teamMembers?:
+          | T
+          | {
+              name?: T;
+              title?: T;
+              description?: T;
+              image?: T;
+              id?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inscricoes_select".
+ */
+export interface InscricoesSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  programs?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        ageRange?: T;
+        image?: T;
+        imagePosition?: T;
+        backgroundColor?: T;
+        buttons?:
+          | T
+          | {
+              inscricaoButton?:
+                | T
+                | {
+                    text?: T;
+                    link?: T;
+                  };
+              informacoesButton?:
+                | T
+                | {
+                    text?: T;
+                    link?: T;
+                  };
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contactos_select".
+ */
+export interface ContactosSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  contactInfo?:
+    | T
+    | {
+        phone?: T;
+        email?: T;
+        address?:
+          | T
+          | {
+              street?: T;
+              postalCode?: T;
+              description?: T;
+            };
+        socialMedia?:
+          | T
+          | {
+              instagram?: T;
+              facebook?: T;
+            };
+      };
+  contactForm?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        submitButtonText?: T;
+      };
+  openingHours?:
+    | T
+    | {
+        title?: T;
+        schedule?:
+          | T
+          | {
+              day?: T;
+              hours?: T;
+              notes?: T;
+              id?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;

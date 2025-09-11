@@ -12,7 +12,9 @@ import { Pages } from './collections/Pages'
 import { Media } from './collections/Media'
 import { Homepage } from './globals/Homepage'
 import { MainMenu } from './globals/MainMenu'
-
+import { QuemSomos } from './globals/QuemSomos'
+import { Inscricoes } from './globals/Inscricoes'
+import { Contactos } from './globals/Contactos'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -24,7 +26,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Pages, Media],
-  globals: [Homepage, MainMenu],
+  globals: [Homepage, MainMenu, QuemSomos, Inscricoes, Contactos],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

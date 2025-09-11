@@ -25,21 +25,79 @@ interface HomepageData {
 			style: "fill" | "outline";
 		}>;
 	};
+	activitiesSection: {
+		title: string;
+		text: string;
+		activities: Array<{
+			image: {
+				url: string;
+				alt: string;
+			};
+		}>;
+		button: {
+			text: string;
+			link: string;
+		};
+	};
 }
 
 // Fetch data from the Payload 'homepage' global
 async function getHomepageData(): Promise<HomepageData | null> {
 	try {
-		const res = await fetch("http://localhost:3000/api/globals/homepage", {
+		// Use environment variable with fallback
+		const baseUrl = process.env.NEXT_PUBLIC_API_URL || process.env.PAYLOAD_PUBLIC_SERVER_URL || "http://localhost:3000";
+
+		const res = await fetch(`${baseUrl}/api/globals/homepage`, {
 			cache: "no-store",
+			// Add timeout for better error handling
+			signal: AbortSignal.timeout(10000), // 10 second timeout
 		});
 
-		if (!res.ok) return null;
+		if (!res.ok) {
+			console.warn(`Failed to fetch homepage data: ${res.status} ${res.statusText}`);
+			return null;
+		}
 
 		const data = await res.json();
-		return data;
+
+		// Validate required data structure
+		if (!data || !data.hero || !data.ctaBanner) {
+			console.warn("Invalid homepage data structure:", data);
+			return null;
+		}
+
+		// Transform the data to include full image URLs
+		const transformedData = {
+			...data,
+			hero: {
+				...data.hero,
+				image: {
+					...data.hero.image,
+					url: `${baseUrl}${data.hero.image.url}`,
+				},
+			},
+			activitiesSection: data.activitiesSection
+				? {
+						...data.activitiesSection,
+						activities:
+							data.activitiesSection.activities?.map((activity: any) => ({
+								...activity,
+								image: {
+									...activity.image,
+									url: `${baseUrl}${activity.image.url}`,
+								},
+							})) || [],
+				  }
+				: null,
+		};
+
+		return transformedData;
 	} catch (error) {
-		console.error("Error fetching homepage data:", error);
+		if (error instanceof Error) {
+			console.error("Error fetching homepage data:", error.message);
+		} else {
+			console.error("Unknown error fetching homepage data:", error);
+		}
 		return null;
 	}
 }
@@ -55,31 +113,63 @@ export default async function Home() {
 		);
 	}
 
-	const { hero, ctaBanner } = homepage;
-	// Construct the full image URL
-	const imageUrl = `http://localhost:3000${hero.image.url}`;
+	const { hero, ctaBanner, activitiesSection } = homepage;
 
 	return (
-		<main className="container mx-auto px-6 py-12">
-			<section className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-				{/* Left Column: Text Content */}
-				<div className="flex flex-col items-start text-left">
-					<h1 className="text-5xl font-serif mb-4 text-[#3c2913]">{hero.title}</h1>
-					<p className="text-lg mb-8 text-[#3c2913]">{hero.subtitle}</p>
-					<Link href={hero.button.link}>
-						<span className="inline-block border border-gray-400 text-gray-700 px-8 py-3 hover:bg-gray-100 transition-colors">
-							{hero.button.text}
-						</span>
-					</Link>
-				</div>
+		<main>
+			{/* Hero Section */}
+			<section className="container mx-auto px-6 py-16">
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+					{/* Left Column: Text Content */}
+					<div className="flex flex-col items-start text-left max-w-lg">
+						<h1 className="text-5xl lg:text-6xl font-serif mb-6 text-[#A15B43] leading-tight">{hero.title}</h1>
+						<p className="text-lg mb-8 text-[#6B4E37] leading-relaxed">{hero.subtitle}</p>
+						<Link href={hero.button.link}>
+							<span className="inline-block border-2 border-[#A15B43] text-[#A15B43] px-8 py-3 font-medium hover:bg-[#A15B43] hover:text-white transition-all duration-200">
+								{hero.button.text}
+							</span>
+						</Link>
+					</div>
 
-				{/* Right Column: Image */}
-				<div className="relative h-96 md:h-[500px]">
-					<Image src={imageUrl} alt={hero.image.alt} fill className="object-cover" />
+					{/* Right Column: Image */}
+					<div className="relative h-96 lg:h-[600px] rounded-lg overflow-hidden">
+						<Image src={hero.image.url} alt={hero.image.alt} fill className="object-cover" priority />
+					</div>
 				</div>
 			</section>
 
+			{/* CTA Banner */}
 			<CtaBanner {...ctaBanner} />
+
+			{/* Activities Section */}
+			<section className="container mx-auto px-6 py-16">
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+					{/* Left Column: Images Grid */}
+					<div className="grid grid-cols-2 gap-4">
+						{activitiesSection.activities.slice(0, 4).map((activity, index) => (
+							<div key={index} className="relative aspect-square rounded-lg overflow-hidden">
+								<Image
+									src={activity.image.url}
+									alt={activity.image.alt}
+									fill
+									className="object-cover hover:scale-105 transition-transform duration-300"
+								/>
+							</div>
+						))}
+					</div>
+
+					{/* Right Column: Text Content */}
+					<div className="flex flex-col items-start text-left lg:pl-8">
+						<h2 className="text-3xl lg:text-4xl font-serif mb-6 text-brand-warm">{activitiesSection.title}</h2>
+						<p className="text-base lg:text-lg mb-8 text-brand-dark leading-relaxed">{activitiesSection.text}</p>
+						<Link href={activitiesSection.button.link}>
+							<span className="inline-block border border-brand-accent text-brand-accent px-6 py-3 text-sm font-medium hover:bg-brand-accent hover:text-white transition-all duration-200">
+								{activitiesSection.button.text}
+							</span>
+						</Link>
+					</div>
+				</div>
+			</section>
 		</main>
 	);
 }
