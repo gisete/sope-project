@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@theme {
+	--color-brand-dark: #3c2913; /* For links and main text */
+	--color-brand-warm: #a15b43; /* For headings */
+	--color-brand-accent: #e2b44d; /* For CTA buttons */
+	--color-brand-light: #f0eddd; /* For optional backgrounds */
+}
+
 :root {
 	--background: #fdfaf6;
 	--foreground: #3c2913;
@@ -18,6 +25,7 @@ body {
 	background: var(--background);
 	color: var(--foreground);
 	font-family: var(--font-sans);
+	line-height: 1.6;
 }
 
 h1,
@@ -27,4 +35,17 @@ h4,
 h5,
 h6 {
 	font-family: var(--font-serif);
+	font-weight: 500;
+}
+
+/* Smooth transitions for interactive elements */
+a,
+button {
+	transition: all 0.2s ease-in-out;
+}
+
+/* Ensure images don't overflow */
+img {
+	max-width: 100%;
+	height: auto;
 }
