@@ -28,12 +28,10 @@ interface HomepageData {
 	activitiesSection: {
 		title: string;
 		text: string;
-		activities: Array<{
-			image: {
-				url: string;
-				alt: string;
-			};
-		}>;
+		image: {
+			url: string;
+			alt: string;
+		};
 		button: {
 			text: string;
 			link: string;
@@ -143,23 +141,14 @@ export default async function Home() {
 
 			{/* Activities Section */}
 			<section className="container mx-auto px-6 py-16">
-				<div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-					{/* Left Column: Images Grid */}
-					<div className="grid grid-cols-2 gap-4">
-						{activitiesSection.activities.slice(0, 4).map((activity, index) => (
-							<div key={index} className="relative aspect-square rounded-lg overflow-hidden">
-								<Image
-									src={activity.image.url}
-									alt={activity.image.alt}
-									fill
-									className="object-cover hover:scale-105 transition-transform duration-300"
-								/>
-							</div>
-						))}
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start max-w-6xl mx-auto">
+					{/* Left Column: Single Activities Image */}
+					<div className="relative aspect-square rounded-lg overflow-hidden">
+						<Image src={activitiesSection.image.url} alt={activitiesSection.image.alt} fill className="object-cover" />
 					</div>
 
 					{/* Right Column: Text Content */}
-					<div className="flex flex-col items-start text-left lg:pl-8">
+					<div className="flex flex-col justify-center">
 						<h2 className="text-3xl lg:text-4xl font-serif mb-6 text-brand-warm">{activitiesSection.title}</h2>
 						<p className="text-base lg:text-lg mb-8 text-brand-dark leading-relaxed">{activitiesSection.text}</p>
 						<Link href={activitiesSection.button.link}>

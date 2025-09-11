@@ -370,12 +370,10 @@ export interface Homepage {
   activitiesSection: {
     title: string;
     text: string;
-    activities?:
-      | {
-          image: number | Media;
-          id?: string | null;
-        }[]
-      | null;
+    /**
+     * Upload a single image that contains 4 activities arranged in a 2x2 grid
+     */
+    image: number | Media;
     button: {
       text: string;
       link: string;
@@ -574,12 +572,7 @@ export interface HomepageSelect<T extends boolean = true> {
     | {
         title?: T;
         text?: T;
-        activities?:
-          | T
-          | {
-              image?: T;
-              id?: T;
-            };
+        image?: T;
         button?:
           | T
           | {
