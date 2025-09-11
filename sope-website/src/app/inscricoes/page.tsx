@@ -62,13 +62,26 @@ async function getInscricoesData(): Promise<InscricoesData | null> {
 				},
 			},
 			programs:
-				data.programs?.map((program: any) => ({
-					...program,
-					image: {
-						...program.image,
-						url: `${baseUrl}${program.image.url}`,
-					},
-				})) || [],
+				data.programs?.map(
+					(program: {
+						title: string;
+						description: string;
+						ageRange?: string;
+						image: { url: string; alt: string };
+						imagePosition: string;
+						backgroundColor: string;
+						buttons: {
+							inscricaoButton: { text: string; link: string };
+							informacoesButton: { text: string; link: string };
+						};
+					}) => ({
+						...program,
+						image: {
+							...program.image,
+							url: `${baseUrl}${program.image.url}`,
+						},
+					})
+				) || [],
 		};
 
 		return transformedData;

@@ -81,8 +81,8 @@ async function getHomepageData(): Promise<HomepageData | null> {
 							data.activitiesSection.activities?.map((activity: any) => ({
 								...activity,
 								image: {
-									...activity.image,
-									url: `${baseUrl}${activity.image.url}`,
+									url: `${baseUrl}${(activity as { image: { url: string; alt: string } }).image.url}`,
+									alt: (activity as { image: { url: string; alt: string } }).image.alt,
 								},
 							})) || [],
 				  }

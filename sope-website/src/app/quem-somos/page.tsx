@@ -81,15 +81,17 @@ async function getQuemSomosData(): Promise<QuemSomosData | null> {
 			principiosSection: {
 				...data.principiosSection,
 				content:
-					data.principiosSection.content?.map((item: any) => ({
-						...item,
-						image: item.image
-							? {
-									...item.image,
-									url: `${baseUrl}${item.image.url}`,
-							  }
-							: undefined,
-					})) || [],
+					data.principiosSection.content?.map(
+						(item: { type: string; text?: string; image?: { url: string; alt: string } }) => ({
+							...item,
+							image: item.image
+								? {
+										...item.image,
+										url: `${baseUrl}${item.image.url}`,
+								  }
+								: undefined,
+						})
+					) || [],
 			},
 			pretendemoSection: {
 				...data.pretendemoSection,
@@ -103,13 +105,15 @@ async function getQuemSomosData(): Promise<QuemSomosData | null> {
 			equipaSection: {
 				...data.equipaSection,
 				teamMembers:
-					data.equipaSection.teamMembers?.map((member: any) => ({
-						...member,
-						image: {
-							...member.image,
-							url: `${baseUrl}${member.image.url}`,
-						},
-					})) || [],
+					data.equipaSection.teamMembers?.map(
+						(member: { name: string; title: string; description: string; image: { url: string; alt: string } }) => ({
+							...member,
+							image: {
+								...member.image,
+								url: `${baseUrl}${member.image.url}`,
+							},
+						})
+					) || [],
 			},
 		};
 

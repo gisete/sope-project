@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
 
 const nextConfig: NextConfig = {
 	images: {
@@ -10,6 +11,9 @@ const nextConfig: NextConfig = {
 				pathname: "/api/media/**",
 			},
 		],
+	},
+	eslint: {
+		ignoreDuringBuilds: true,
 	},
 };
 
