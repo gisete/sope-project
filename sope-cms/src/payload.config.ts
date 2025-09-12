@@ -26,7 +26,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'sope-cms.vercel.app',
+  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'https://sope-cms.vercel.app',
   collections: [Users, Pages, Media],
   globals: [Homepage, MainMenu, QuemSomos, Inscricoes, Contactos],
   editor: lexicalEditor(),
