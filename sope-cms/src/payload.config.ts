@@ -25,6 +25,10 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    // Add this to simplify initial admin load
+    meta: {
+      titleSuffix: '- Admin',
+    },
   },
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'https://sope-cms.vercel.app',
   collections: [Users, Pages, Media],
@@ -46,16 +50,6 @@ export default buildConfig({
       isolationLevel: 'read committed',
     },
   }),
-  admin: {
-    user: Users.slug,
-    importMap: {
-      baseDir: path.resolve(dirname),
-    },
-    // Add this to simplify initial admin load
-    meta: {
-      titleSuffix: '- Admin',
-    },
-  },
   sharp,
   plugins: [
     payloadCloudPlugin(),
