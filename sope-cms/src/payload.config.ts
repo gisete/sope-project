@@ -39,10 +39,23 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI || '',
       max: 1,
       min: 0,
-      idleTimeoutMillis: 1000, // Very short idle timeout
-      connectionTimeoutMillis: 10000, // 10 seconds max to connect
+      idleTimeoutMillis: 500,
+      connectionTimeoutMillis: 5000,
+    },
+    transactionOptions: {
+      isolationLevel: 'read committed',
     },
   }),
+  admin: {
+    user: Users.slug,
+    importMap: {
+      baseDir: path.resolve(dirname),
+    },
+    // Add this to simplify initial admin load
+    meta: {
+      titleSuffix: '- Admin',
+    },
+  },
   sharp,
   plugins: [
     payloadCloudPlugin(),
