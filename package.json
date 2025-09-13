@@ -1,0 +1,35 @@
+{
+	"name": "sope-website",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "eslint",
+		"payload": "payload"
+	},
+	"dependencies": {
+		"@aws-sdk/client-s3": "^3.888.0",
+		"@payloadcms/db-postgres": "beta",
+		"@payloadcms/next": "beta",
+		"@payloadcms/richtext-lexical": "beta",
+		"@payloadcms/storage-s3": "^3.0.0-beta.135",
+		"@payloadcms/storage-uploadthing": "beta",
+		"next": "15.5.2",
+		"payload": "beta",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"sharp": "^0.33.0"
+	},
+	"devDependencies": {
+		"@tailwindcss/postcss": "^4",
+		"@types/node": "^20",
+		"@types/react": "^18.3.0",
+		"@types/react-dom": "^18.3.0",
+		"eslint": "^9",
+		"eslint-config-next": "15.5.2",
+		"tailwindcss": "^4",
+		"typescript": "^5"
+	}
+}

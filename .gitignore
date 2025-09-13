@@ -1,30 +1,8 @@
-# Dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# Build outputs
-/.next/
-/build/
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Local env files
-.env
+node_modules/
+.next/
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Payload CMS specific
-/sope-cms/db.sqlite
-/sope-cms/upload/
-
-# Mac/Windows system files
+.env.production
+.vercel/
+media/
+*.log
 .DS_Store
-Thumbs.db
