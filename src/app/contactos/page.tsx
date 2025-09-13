@@ -1,88 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-
-// Types for the Contactos page data
-interface ContactosData {
-	hero: {
-		title: string;
-		description?: string;
-		image: {
-			url: string;
-			alt: string;
-		};
-	};
-	contactInfo: {
-		phone: string;
-		email: string;
-		address: {
-			street: string;
-			postalCode: string;
-			description?: string;
-		};
-		socialMedia: {
-			instagram?: string;
-			facebook?: string;
-		};
-	};
-	openingHours: {
-		showSection?: boolean;
-		title?: string;
-		schedule?: Array<{
-			day: string;
-			hours: string;
-			notes?: string;
-		}>;
-	};
-}
-
-// Fetch data from Payload CMS
-async function getContactosData(): Promise<ContactosData | null> {
-	try {
-		const baseUrl = process.env.NEXT_PUBLIC_API_URL || process.env.PAYLOAD_PUBLIC_SERVER_URL || "http://localhost:3000";
-
-		const res = await fetch(`${baseUrl}/api/globals/contactos`, {
-			cache: "no-store",
-			signal: AbortSignal.timeout(10000),
-		});
-
-		if (!res.ok) {
-			console.warn(`Failed to fetch contactos data: ${res.status} ${res.statusText}`);
-			return null;
-		}
-
-		const data = await res.json();
-
-		// Validate required data structure
-		if (!data || !data.hero || !data.contactInfo) {
-			console.warn("Invalid contactos data structure:", data);
-			return null;
-		}
-
-		// Transform image URLs
-		const transformedData = {
-			...data,
-			hero: {
-				...data.hero,
-				image: {
-					...data.hero.image,
-					url: `${baseUrl}${data.hero.image.url}`,
-				},
-			},
-		};
-
-		return transformedData;
-	} catch (error) {
-		if (error instanceof Error) {
-			console.error("Error fetching contactos data:", error.message);
-		} else {
-			console.error("Unknown error fetching contactos data:", error);
-		}
-		return null;
-	}
-}
+import { getGlobal } from "@/lib/payload";
 
 export default async function ContactosPage() {
-	const pageData = await getContactosData();
+	// Direct database access
+	const pageData = await getGlobal("contactos");
 
 	if (!pageData) {
 		return (
@@ -107,7 +29,7 @@ export default async function ContactosPage() {
 							</h1>
 							{hero.description && (
 								<div className="space-y-4 mb-8">
-									{hero.description.split("\n").map((line, index) => (
+									{hero.description.split("\n").map((line: string, index: number) => (
 										<p key={index} className="text-base lg:text-lg text-brand-dark">
 											{line}
 										</p>

@@ -1,101 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getGlobal } from "@/lib/payload";
 
-// Types for the Inscrições page data
-interface InscricoesData {
-	hero: {
-		title: string;
-		description?: string;
-		image: {
-			url: string;
-			alt: string;
-		};
-	};
-	programs: Array<{
-		title: string;
-		description: string;
-		ageRange?: string;
-		image: {
-			url: string;
-			alt: string;
-		};
-		imagePosition: "left" | "right";
-		backgroundColor: "pink" | "gray" | "blue" | "green" | "white";
-		buttons: {
-			inscricaoButton: {
-				text: string;
-				link: string;
-			};
-			informacoesButton: {
-				text: string;
-				link: string;
-			};
-		};
-	}>;
-}
-
-// Fetch data from Payload CMS
-async function getInscricoesData(): Promise<InscricoesData | null> {
-	try {
-		const baseUrl = process.env.NEXT_PUBLIC_API_URL || process.env.PAYLOAD_PUBLIC_SERVER_URL || "http://localhost:3000";
-
-		const res = await fetch(`${baseUrl}/api/globals/inscricoes`, {
-			cache: "no-store",
-			signal: AbortSignal.timeout(10000),
-		});
-
-		if (!res.ok) {
-			console.warn(`Failed to fetch inscricoes data: ${res.status} ${res.statusText}`);
-			return null;
-		}
-
-		const data = await res.json();
-
-		// Transform image URLs
-		const transformedData = {
-			...data,
-			hero: {
-				...data.hero,
-				image: {
-					...data.hero.image,
-					url: `${baseUrl}${data.hero.image.url}`,
-				},
-			},
-			programs:
-				data.programs?.map(
-					(program: {
-						title: string;
-						description: string;
-						ageRange?: string;
-						image: { url: string; alt: string };
-						imagePosition: string;
-						backgroundColor: string;
-						buttons: {
-							inscricaoButton: { text: string; link: string };
-							informacoesButton: { text: string; link: string };
-						};
-					}) => ({
-						...program,
-						image: {
-							...program.image,
-							url: `${baseUrl}${program.image.url}`,
-						},
-					})
-				) || [],
-		};
-
-		return transformedData;
-	} catch (error) {
-		if (error instanceof Error) {
-			console.error("Error fetching inscricoes data:", error.message);
-		} else {
-			console.error("Unknown error fetching inscricoes data:", error);
-		}
-		return null;
-	}
-}
-
-// Helper function to get background color classes
+// Helper function stays the same
 function getBackgroundColor(color: string): string {
 	switch (color) {
 		case "pink":
@@ -113,7 +20,8 @@ function getBackgroundColor(color: string): string {
 }
 
 export default async function InscricoesPage() {
-	const pageData = await getInscricoesData();
+	// Direct database access
+	const pageData = await getGlobal("inscricoes");
 
 	if (!pageData) {
 		return (
@@ -138,7 +46,7 @@ export default async function InscricoesPage() {
 							</h1>
 							{hero.description && (
 								<div className="space-y-4 mb-8">
-									{hero.description.split("\n").map((line, index) => (
+									{hero.description.split("\n").map((line: string, index: number) => (
 										<p key={index} className="text-base lg:text-lg text-brand-dark">
 											{line}
 										</p>

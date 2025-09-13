@@ -1,135 +1,9 @@
 import Image from "next/image";
-
-// Types for the Quem Somos page data
-interface QuemSomosData {
-	hero: {
-		title: string;
-		description: string;
-		image: {
-			url: string;
-			alt: string;
-		};
-	};
-	oSopeSection: {
-		title: string;
-		text: string;
-	};
-	principiosSection: {
-		title: string;
-		content: Array<{
-			type: "text" | "image";
-			text?: string;
-			image?: {
-				url: string;
-				alt: string;
-			};
-			imagePosition?: "left" | "right" | "center";
-		}>;
-	};
-	pretendemoSection: {
-		title: string;
-		layout: "text-left" | "image-left";
-		bulletPoints: Array<{
-			text: string;
-		}>;
-		image?: {
-			url: string;
-			alt: string;
-		};
-	};
-	equipaSection: {
-		title: string;
-		teamMembers: Array<{
-			name: string;
-			title: string;
-			description: string;
-			image: {
-				url: string;
-				alt: string;
-			};
-		}>;
-	};
-}
-
-// Fetch data from Payload CMS
-async function getQuemSomosData(): Promise<QuemSomosData | null> {
-	try {
-		const baseUrl = process.env.NEXT_PUBLIC_API_URL || process.env.PAYLOAD_PUBLIC_SERVER_URL || "http://localhost:3000";
-
-		const res = await fetch(`${baseUrl}/api/globals/quem-somos`, {
-			cache: "no-store",
-			signal: AbortSignal.timeout(10000),
-		});
-
-		if (!res.ok) {
-			console.warn(`Failed to fetch quem-somos data: ${res.status} ${res.statusText}`);
-			return null;
-		}
-
-		const data = await res.json();
-
-		// Transform image URLs
-		const transformedData = {
-			...data,
-			hero: {
-				...data.hero,
-				image: {
-					...data.hero.image,
-					url: `${baseUrl}${data.hero.image.url}`,
-				},
-			},
-			principiosSection: {
-				...data.principiosSection,
-				content:
-					data.principiosSection.content?.map(
-						(item: { type: string; text?: string; image?: { url: string; alt: string } }) => ({
-							...item,
-							image: item.image
-								? {
-										...item.image,
-										url: `${baseUrl}${item.image.url}`,
-								  }
-								: undefined,
-						})
-					) || [],
-			},
-			pretendemoSection: {
-				...data.pretendemoSection,
-				image: data.pretendemoSection.image
-					? {
-							...data.pretendemoSection.image,
-							url: `${baseUrl}${data.pretendemoSection.image.url}`,
-					  }
-					: undefined,
-			},
-			equipaSection: {
-				...data.equipaSection,
-				teamMembers:
-					data.equipaSection.teamMembers?.map(
-						(member: { name: string; title: string; description: string; image: { url: string; alt: string } }) => ({
-							...member,
-							image: {
-								...member.image,
-								url: `${baseUrl}${member.image.url}`,
-							},
-						})
-					) || [],
-			},
-		};
-
-		return transformedData;
-	} catch (error) {
-		if (error instanceof Error) {
-			console.error("Error fetching quem-somos data:", error.message);
-		} else {
-			console.error("Unknown error fetching quem-somos data:", error);
-		}
-		return null;
-	}
-}
+import { getGlobal } from "@/lib/payload";
 
 export default async function QuemSomosPage() {
-	const pageData = await getQuemSomosData();
+	// Direct database access - no HTTP calls!
+	const pageData = await getGlobal("quem-somos");
 
 	if (!pageData) {
 		return (
@@ -153,7 +27,7 @@ export default async function QuemSomosPage() {
 								{hero.title}
 							</h1>
 							<div className="space-y-4 mb-8">
-								{hero.description.split("\n").map((line, index) => (
+								{hero.description.split("\n").map((line: string, index: number) => (
 									<p key={index} className="text-base lg:text-lg text-brand-dark">
 										{line}
 									</p>
